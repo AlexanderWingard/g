@@ -85,5 +85,5 @@ firstarg = a.gitcommand[0]
 if firstarg in myargs:
     myargs[firstarg]()
 else:
-    p(c("git {}", list2cmdline(a.gitcommand)))
+    e("git {}", list2cmdline(a.gitcommand))
     do_st()
