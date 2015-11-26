@@ -2,6 +2,7 @@
 
 from shpy import *
 from itertools import product
+from subprocess import list2cmdline
 
 
 def do_st():
@@ -70,29 +71,19 @@ def do_pop():
     c("git stash pop --index")
     do_st()
 
+parser.add_argument("gitcommand", nargs=argparse.REMAINDER, type=str)
 
-subparsers = parser.add_subparsers(help="commands")
-status_parser = subparsers.add_parser('s', help='status');
-status_parser.set_defaults(func=do_st);
+a = init()
 
-branch_parser = subparsers.add_parser('b', help='branch');
-branch_parser.set_defaults(func=do_branch);
+myargs = {
+    'status': do_st,
+    'branch': do_branch,
+    'stash' : do_stash
+}
+firstarg = a.gitcommand[0]
 
-
-stash_parser = subparsers.add_parser('stash', help='stash');
-stash_parser.set_defaults(func=do_stash);
-
-pop_parser = subparsers.add_parser('pop', help='stash pop');
-pop_parser.set_defaults(func=do_pop);
-
-
-if (len(sys.argv) < 2):
-    sys.argv.append("s")
-
-if (sys.argv[1] not in ["s", "b", "stash", "pop"]):
-    c("git {}", " ".join(sys.argv[1:]))
-    do_st()
+if firstarg in myargs:
+    myargs[firstarg]()
 else:
-    a = init()
-    a.func()
-
+    p(c("git {}", list2cmdline(a.gitcommand)))
+    do_st()
