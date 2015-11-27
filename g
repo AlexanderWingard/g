@@ -2,7 +2,7 @@
 
 from shpy import *
 from itertools import product
-from subprocess import list2cmdline
+from subprocess import list2cmdline, call
 
 
 def do_st():
@@ -77,14 +77,15 @@ parser.add_argument("gitcommand", nargs=argparse.REMAINDER, type=str)
 a = init()
 
 myargs = {
-    'status': do_st,
     'branch': do_branch,
-    'stash' : do_stash
+    'stash' : do_stash,
+    'pop' : do_pop
 }
-firstarg = a.gitcommand[0]
 
-if firstarg in myargs:
-    myargs[firstarg]()
+if(len(a.gitcommand) == 0):
+    do_st()
+elif a.gitcommand[0] in myargs and len(a.gitcommand) == 1:
+    myargs[a.gitcommand[0]]()
 else:
-    e("git {}", list2cmdline(a.gitcommand))
+    call(["git"] + a.gitcommand)
     do_st()
