@@ -6,7 +6,8 @@ from subprocess import list2cmdline
 
 
 def do_st():
-    c("git fetch")
+    if(len(c("git config g.autofetch", exit=True))):
+        c("git fetch")
     upstream = "".join(c("git rev-parse --abbrev-ref --symbolic-full-name '@{{u}}'", exit=True))
     #branches = ["master", "a", "b", "c"]
     branches = ["HEAD", upstream]
