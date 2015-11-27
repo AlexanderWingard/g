@@ -46,6 +46,11 @@ def do_st():
 
     p(reversed(statused))
 
+    username = "".join(c("git config --local user.name", exit=True))
+    email = "".join(c("git config --local user.email", exit=True))
+    if username == "" or email == "":
+        p("[38;5;202mWARNING: user info not set in repo: git config user.name ''; git config user.email ''[0m")
+
 def do_branch():
     do_st()
     p(c("git -c color.ui=always  branch -vvv"))
